@@ -3,14 +3,20 @@ import os
 import json
 import sys
 
-if len(sys.argv) != 4:
-    sys.exit(0)
+#if len(sys.argv) != 4:
+#    sys.exit(0)
     
 account_no = sys.argv[1] #111122223333
 role_name = sys.argv[2] #"Administrator"
 session_name = sys.argv[3] #"aws-assumed-role-session"
 
-cmd = "aws sts --output json assume-role --role-arn arn:aws:iam::{}:role/{} --role-session-name {}".format(account_no, role_name, session_name)
+cmd_duration_seconds = ""
+if len(sys.argv) == 5:
+    duration_seconds = sys.argv[4]
+    cmd_duration_seconds = "--duration-seconds " + duration_seconds
+
+cmd = "aws sts --output json assume-role --role-arn arn:aws:iam::{}:role/{} --role-session-name {} {}".format(account_no, role_name, session_name, cmd_duration_seconds)
+print(cmd)
 output = os.popen(cmd).read()
 
 creds = json.loads(output)
